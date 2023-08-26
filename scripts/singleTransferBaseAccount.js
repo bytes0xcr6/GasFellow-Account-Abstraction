@@ -1,13 +1,11 @@
-const hre = require("hardhat");
 const { ethers } = require("hardhat");
 const { getSignatureAndValidate } = require("./userOp-signer");
 
 const smartWalletABI = require("../../artifacts/contracts/account_abstraction/smartWallet.sol/smartWallet.json");
-const bundlerPrivateKey = process.env.AA_SIGNER_PRIVATE_KEY;
-const walletOwnerPrivateKey = process.env.SIGNER_MAINNET_PRIVATE_KEY;
-const smartWalletAddress = process.env.BASIC_WALLET_ADDRESS_MAINNET;
+const BundlerPrivateKey = process.env.AA_SIGNER_PRIVATE_KEY;
+const WalletOwnerPrivateKey = process.env.SIGNER_MAINNET_PRIVATE_KEY;
+const smartWalletAddress = "0x000000000000000000";
 const receiverERC20Address = "0x000000000000000000000";
-const BNB_ERC20_RATE = 14369; // How much ERC-20 is 1 BNB? NO DECIMALS.
 
 const ERC20TokenAddress = process.env.ERC20_TOKEN_MAINNET;
 
@@ -24,35 +22,35 @@ async function main() {
     process.env.WEB3_HTTP_PROVIDER_TEST
   );
 
-  const walletOwner = new ethers.Wallet(walletOwnerPrivateKey, provider);
-  const bundler = new ethers.Wallet(bundlerPrivateKey, provider);
-  const balanceBundler = await ethers.provider.getBalance(bundler.address);
+  const [Bundler, WalletOwner] = await ethers.getSigners();
+
+  const balanceBundler = await ethers.provider.getBalance(Bundler.address);
 
   const gasPrice = await ethers.provider.getGasPrice();
 
-  console.log("smartWalletAddress: ", smartWalletAddress);
-  console.log("walletOwnerAddress: ", walletOwner.address);
-  console.log("bundler: ", bundler.address);
+  console.log("smartWallet Address: ", smartWalletAddress);
+  console.log("WalletOwner Address: ", WalletOwner.address);
+  console.log("Bundler: ", Bundler.address);
   console.log(
     "BNB Balance Bundler: ",
     ethers.utils.formatEther(balanceBundler)
   );
   console.log("Gas Price: ", gasPrice);
 
-  // const smartWallet = await ethers.getContractAt(
-  //   "smartWallet",
-  //   smartWalletAddress
-  // );
-
-  const smartWallet = new ethers.Contract(
-    smartWalletAddress,
-    smartWalletABI.abi,
-    provider
+  const smartWallet = await ethers.getContractAt(
+    "smartWallet",
+    smartWalletAddress
   );
+
+  // const smartWallet = new ethers.Contract(
+  //   smartWalletAddress,
+  //   smartWalletABI.abi,
+  //   provider
+  // );
 
   const transferRes = await getSignatureAndValidate(
     smartWallet,
-    walletOwnerPrivateKey,
+    WalletOwnerPrivateKey,
     functionIdTransfer,
     typesArgsTransfer,
     functionArgsTransfer,
@@ -64,7 +62,7 @@ async function main() {
   console.log("\n- ✅ transferERC20 Tx callData: ", transferRes.callData);
 
   const Tx = await smartWallet
-    .connect(bundler)
+    .connect(Bundler)
     .handleOp(
       ERC20TokenAddress,
       0,

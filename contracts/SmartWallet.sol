@@ -5,28 +5,39 @@ pragma solidity 0.8.19;
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 /**
  * @title SmartWallet
  * @dev A smart contract that facilitates transaction execution and fee payment using ERC20 tokens.
  */
 contract SmartWallet is ERC721Holder, ERC1155Holder {
+    AggregatorV3Interface internal immutable priceFeed;
+
     bytes32 private constant _HASHED_NAME =
         keccak256("ERC20 Fee Smart Account");
-    string public version = "1.0";
 
-    address payable public owner;
-    uint256 public nonce;
-    uint256 private CHAIN_ID = 97; // Testnet 97, Mainnet 56 (Binance Smart Chain)
-    address private constant ERC20Address =
-        0x0000000000000000000000000000000000000000; // Replace with your desired ERC20 token address to pay for fees
+    string public constant version = "1.0";
+
+    address payable public immutable owner; // Transaction signer and Owner
+    uint64 private immutable CHAIN_ID; // Chain ID for the Blockchain your are deploying the Smart Wallet
+    address private immutable ERC20Address; // Desired ERC20 token address to pay for fees
+    uint256 public nonce; // Incremental Nonce for eache Smart Wallet Transaction
 
     uint256 private constant POST_OP_GAS = 51494; // Estimated Gas spent for ERC-20 Transfer
 
     event postOpFinished(uint256 ERC20Receipt, uint256 gasReceipt);
 
-    constructor(address _owner) {
+    constructor(
+        address _owner,
+        address priceFeedProxy,
+        uint64 chainId,
+        address ERC20
+    ) {
         owner = payable(_owner);
+        priceFeed = AggregatorV3Interface(priceFeedProxy);
+        CHAIN_ID = chainId;
+        ERC20Address = ERC20;
     }
 
     /*********************************************************VERIFICATION PROCESS*/
@@ -120,16 +131,14 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
         bytes memory callData,
         bytes memory signature,
         uint256 gasPrice,
-        uint256 BNB_ERC20_Rate, // 1BNB to ERC20 Token (Rate)
         bool isSponsored // If set as true, no ERC20 refund is required
     ) public payable {
         uint256 preGas = gasleft();
-        require(BNB_ERC20_Rate != 0, "GasPrice cannot be 0");
         require(gasPrice != 0, "GasPrice cannot be 0");
         executeOp(target, value, callData, signature, nonce);
         if (!isSponsored) {
             uint256 gasLeft = gasleft();
-            postOp(preGas - gasLeft, gasPrice, BNB_ERC20_Rate);
+            postOp(preGas - gasLeft, gasPrice);
         }
     }
 
@@ -142,14 +151,12 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
         bytes[] memory callData,
         bytes[] memory signature,
         uint256 gasPrice,
-        uint256 BNB_ERC20_Rate, // 1BNB to ERC20 Token (Rate)
         bool isSponsored // If set as true, no ERC20 refund is required
     ) external payable {
         uint256 preGas = gasleft();
         require(target.length == callData.length, "wrong array lengths");
         require(value.length == callData.length, "wrong array lengths");
         require(signature.length == callData.length, "wrong array lengths");
-        require(BNB_ERC20_Rate != 0, "GasPrice cannot be 0");
         require(gasPrice != 0, "GasPrice cannot be 0");
 
         uint256 iterations = target.length;
@@ -162,7 +169,7 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
         uint256 gasLeft = gasleft();
         if (!isSponsored) {
-            postOp(preGas - gasLeft, gasPrice, BNB_ERC20_Rate);
+            postOp(preGas - gasLeft, gasPrice);
         }
     }
 
@@ -210,16 +217,27 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
     /**
      * @dev Handles post-operation logic, including fee payment in ERC20 tokens.
      */
-    function postOp(
-        uint256 gasUsed,
-        uint256 gasPrice,
-        uint256 BNB_ERC20_Rate // 1BNB to ERC20 Token (Rate)
-    ) internal {
+    function postOp(uint256 gasUsed, uint256 gasPrice) internal {
         uint256 gasReceipt = (((gasUsed + POST_OP_GAS + 21000))) * (gasPrice);
-        uint256 ERC20Fee = gasReceipt * BNB_ERC20_Rate;
+        uint256 ERC20Fee = gasReceipt * uint256(getLatestPrice());
 
         IERC20(ERC20Address).transfer(msg.sender, ERC20Fee);
         emit postOpFinished(ERC20Fee, gasReceipt);
+    }
+
+    /**
+     * @dev Returns the latest price of ARB to the ERC20 Set.
+     */
+    function getLatestPrice() internal view returns (int) {
+        (
+            ,
+            /* uint80 roundID */ int price /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/,
+            ,
+            ,
+
+        ) = priceFeed.latestRoundData();
+        require(price != 0, "Oracle error");
+        return price;
     }
 
     receive() external payable {}

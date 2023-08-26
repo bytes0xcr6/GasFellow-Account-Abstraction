@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: MIT
 // Developed by: Cristian Richarte Gil
 pragma solidity 0.8.19;
@@ -13,13 +12,15 @@ import "./SmartWallet.sol";
  * A UserOperations "initCode" holds the address of the factory, and a method call (to createWallet, in this sample factory).
  * The factory's createWallet returns the target Wallet address even if it is already installed.
  */
-contract BasicWalletFactory {
-    address public Owner;
+contract SmartWalletFactory {
+    address public WalletDeployer;
+    uint64 immutable CHAINID;
 
-    event BasicWalletCreated(address Owner, address BasicWallet);
+    event SmartWalletCreated(address Owner, address SmartWallet);
 
-    constructor() {
-        Owner = msg.sender;
+    constructor(uint64 chainId) {
+        WalletDeployer = msg.sender;
+        CHAINID = chainId;
     }
 
     /**
@@ -30,17 +31,26 @@ contract BasicWalletFactory {
      */
     function createWallet(
         address owner,
-        uint256 salt
-    ) public returns (BasicWallet ret) {
-        require(msg.sender == Owner, "Not allowed");
-        address addr = getAddress(owner, salt);
+        uint256 salt,
+        address priceFeedProxy,
+        address ERC20Address
+    ) public returns (SmartWallet ret) {
+        require(msg.sender == WalletDeployer, "Not allowed");
+        address addr = getAddress(owner, salt, priceFeedProxy, ERC20Address);
         uint256 codeSize = addr.code.length;
         if (codeSize > 0) {
-            return BasicWallet(payable(addr));
+            return SmartWallet(payable(addr));
         }
-        ret = BasicWallet(new BasicWallet{salt: bytes32(salt)}(owner));
+        ret = SmartWallet(
+            new SmartWallet{salt: bytes32(salt)}(
+                owner,
+                priceFeedProxy,
+                CHAINID,
+                ERC20Address
+            )
+        );
         require(addr == address(ret), "Invalid address");
-        emit BasicWalletCreated(owner, address(ret));
+        emit SmartWalletCreated(owner, address(ret));
     }
 
     /**
@@ -48,15 +58,17 @@ contract BasicWalletFactory {
      */
     function getAddress(
         address owner,
-        uint256 salt
+        uint256 salt,
+        address priceFeedProxy,
+        address ERC20Address
     ) public view returns (address) {
         return
             Create2.computeAddress(
                 bytes32(salt),
                 keccak256(
                     abi.encodePacked(
-                        type(BasicWallet).creationCode,
-                        abi.encode(owner)
+                        type(SmartWallet).creationCode,
+                        abi.encode(owner, priceFeedProxy, CHAINID, ERC20Address)
                     )
                 )
             );

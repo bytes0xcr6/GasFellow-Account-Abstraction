@@ -1,6 +1,6 @@
 const ethers = require("ethers");
 
-const chainId = 97; // Replace with your desired chainId
+const CHAIN_ID = process.env.CHAIN_ID;
 
 // 1. Get CallData before hashing.
 function getCallData(functionId, typesArgs, functionArgs) {
@@ -20,11 +20,11 @@ function getCallData(functionId, typesArgs, functionArgs) {
 }
 
 // 2. Hash Transaction Data.
-function getUserOperationHashed(target, nonce, callData, value, chainId) {
+function getUserOperationHashed(target, nonce, callData, value, CHAIN_ID) {
   let abiCoder = new ethers.utils.AbiCoder();
   let packedData = abiCoder.encode(
     ["address", "uint256", "bytes", "uint256", "uint256"],
-    [target, nonce, callData, value, chainId]
+    [target, nonce, callData, value, CHAIN_ID]
   );
   let messageHash = ethers.utils.keccak256(packedData);
   return ethers.utils.arrayify(messageHash);
@@ -53,7 +53,7 @@ async function getSignatureAndValidate(
     nonce,
     callData,
     value,
-    chainId
+    CHAIN_ID
   );
   let signature = await signMessage(userOpHash, signerPrivateKey);
 
@@ -65,7 +65,7 @@ async function getSignatureAndValidate(
   throw "\n- ❌ Signature error...";
 }
 
-async function getBNBTxSignatureAndValidate(
+async function getValueTxSignatureAndValidate(
   basicWallet,
   signerPrivateKey,
   receiver,
@@ -78,7 +78,7 @@ async function getBNBTxSignatureAndValidate(
     nonce,
     callData,
     value,
-    chainId
+    CHAIN_ID
   );
 
   let signature = await signMessage(userOpHash, signerPrivateKey);
@@ -99,5 +99,5 @@ async function getBNBTxSignatureAndValidate(
 
 module.exports = {
   getSignatureAndValidate,
-  getBNBTxSignatureAndValidate,
+  getValueTxSignatureAndValidate,
 };

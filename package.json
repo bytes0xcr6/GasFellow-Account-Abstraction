@@ -8,6 +8,7 @@
     "hardhat-gas-reporter": "^1.0.9"
   },
   "dependencies": {
+    "@chainlink/contracts": "^0.6.1",
     "@pancakeswap/pancake-swap-lib": "^0.0.4",
     "hardhat-tracer": "^2.6.0",
     "keccak256": "^1.0.6",
