@@ -4,8 +4,10 @@ pragma solidity 0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "./IERC20Extended.sol";
+
+import "hardhat/console.sol";
 
 /**
  * @title SmartWallet
@@ -21,8 +23,10 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     address payable public immutable owner; // Transaction signer and Owner
     uint64 private immutable CHAIN_ID; // Chain ID for the Blockchain your are deploying the Smart Wallet
-    address private immutable ERC20Address; // Desired ERC20 token address to pay for fees
+    IERC20 private immutable ERC20Token; // Desired ERC20 token address to pay for fees
     uint256 public nonce; // Incremental Nonce for eache Smart Wallet Transaction
+
+    uint8 constant protocolFee = 20; // Protocol fee % to avoid lossing for Exchange rate.
 
     uint256 private constant POST_OP_GAS = 51494; // Estimated Gas spent for ERC-20 Transfer
 
@@ -37,7 +41,7 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
         owner = payable(_owner);
         priceFeed = AggregatorV3Interface(priceFeedProxy);
         CHAIN_ID = chainId;
-        ERC20Address = ERC20;
+        ERC20Token = IERC20(ERC20);
     }
 
     /*********************************************************VERIFICATION PROCESS*/
@@ -218,10 +222,15 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
      * @dev Handles post-operation logic, including fee payment in ERC20 tokens.
      */
     function postOp(uint256 gasUsed, uint256 gasPrice) internal {
-        uint256 gasReceipt = (((gasUsed + POST_OP_GAS + 21000))) * (gasPrice);
+        console.log("Decimals: ", ERC20Token.decimals());
+        uint256 gasReceipt = ((((gasUsed + POST_OP_GAS))) * (gasPrice)) /
+            (10 ** ERC20Token.decimals());
         uint256 ERC20Fee = gasReceipt * uint256(getLatestPrice());
 
-        IERC20(ERC20Address).transfer(msg.sender, ERC20Fee);
+        ERC20Token.transfer(
+            msg.sender,
+            ERC20Fee + ((ERC20Fee * protocolFee) / 100)
+        );
         emit postOpFinished(ERC20Fee, gasReceipt);
     }
 
@@ -237,6 +246,7 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
         ) = priceFeed.latestRoundData();
         require(price != 0, "Oracle error");
+        console.log("Price: ", uint256(price));
         return price;
     }
 

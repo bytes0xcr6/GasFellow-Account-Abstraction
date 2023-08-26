@@ -2,9 +2,10 @@ const { ethers } = require("hardhat");
 
 async function main() {
   const Owner = process.env.SMART_WALLET_OWNER_PUBLIC_KEY;
-  
+
   const salt = "0"; // Update it for every new Smart wallet creation for each Signer. It will change the deployed address and it can be precomputed.
-  const SmartWalletFactoryAddress = "0x0000000"; // You should replace it with your Wallet Factory Address
+  const SmartWalletFactoryAddress =
+    "0x1613B90591c94f5Df81c0F60AFAbd807De491DBb"; // You should replace it with your Wallet Factory Address
 
   const priceFeedProxyAddress = process.env.PRICE_FEED_PROXY;
   const ERC20Address = process.env.ERC20_FEE;

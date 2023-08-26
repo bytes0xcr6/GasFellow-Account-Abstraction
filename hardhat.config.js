@@ -11,28 +11,29 @@ module.exports = {
 
   networks: {
     hardhat: {
-      chainId: 1337,
       forking: {
-        url: process.env.WEB3_HTTP_PROVIDER_MAIN,
-        // blockNumber: 29091905,
+        chainId: process.env.CHAIN_ID,
+        url: process.env.WEB3_HTTP_PROVIDER_TESTNET,
       },
-      gas: 20000000,
     },
     localhost: {
       url: "http://127.0.0.1:8545",
     },
-    bsctest: {
-      url: process.env.WEB3_HTTP_PROVIDER_TEST,
+    testnet: {
+      url: process.env.WEB3_HTTP_PROVIDER_TESTNET,
       accounts: [
-        process.env.ADMIN_PRIVATE_KEY_TESTNET,
-        process.env.USER_PRIVATE_KEY_TESTNET,
+        process.env.BUNDLER_PRIVATE_KEY,
+        process.env.SMART_WALLET_OWNER_PRIVATE_KEY,
       ],
       gas: 2100000,
       gasPrice: 10000000000,
     },
-    bscmain: {
-      url: process.env.WEB3_HTTP_PROVIDER_MAIN,
-      accounts: [process.env.OWNER_PRIVATE_KEY],
+    mainnet: {
+      url: process.env.WEB3_HTTP_PROVIDER_MAINNET,
+      accounts: [
+        process.env.BUNDLER_PRIVATE_KEY,
+        process.env.SMART_WALLET_OWNER_PRIVATE_KEY,
+      ],
       gas: 2100000,
       gasPrice: 10000000000,
     },
@@ -44,7 +45,7 @@ module.exports = {
     },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.SCAN_API_KEY,
   },
 
   paths: {
@@ -75,13 +76,13 @@ module.exports = {
       },
     ],
   },
-  gasReporter: {
-    enabled: true,
-    // outputFile: "gas-report.txt",
-    currency: "EUR",
-    gasPrice: 5,
-    token: "BNB",
-    coinmarketcap: process.env.COINMARKETCAP_API,
-    gasPriceApi: process.env.BINANCE_GAS_API,
-  },
+  // gasReporter: {
+  //   enabled: true,
+  //   // outputFile: "gas-report.txt",
+  //   currency: "EUR", // You can replace it with your desired currency
+  //   gasPrice: 5,
+  //   token: "ARB", // You can replace it with your desired currency
+  //   coinmarketcap: process.env.COINMARKETCAP_API,
+  //   gasPriceApi: process.env.BINANCE_GAS_API,
+  // },
 };
