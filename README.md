@@ -1,6 +1,9 @@
-# Account-Abstraction
+# Account-Abstraction (ERC-20 for paying Gas Fee) 
 
 Account Abstraction Library for deploying Smart Wallets and paying chain fees in any ERC-20.
+
+![image](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/57a92498-e657-442c-a0ed-94488b82677f)
+_Example of Transferring 1.000 eUSD and charging 0.00128788 as fee (Refund for Bundler). The Smart Wallet does not own the native chain currency._ [ArbiScan ERC20 Transfer receipt](https://goerli.arbiscan.io/tx/0x33aef128dd49a63af12981e9dff6a13c5d933d183b090dc05c763d3aa4f354ea)
 
 # Smart Wallet with Account Abstraction
 
@@ -76,6 +79,8 @@ Deploy the SmartWallet contract to your desired blockchain using your chosen dev
    ```sh
    npx hardhat run scripts/deploySmartWallet.js --network NETWORK_NAME
    ```
+   ![image](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/828f2f6d-5df5-4539-935e-77c01ece567a)
+[ArbiScan Deployment receipt](https://goerli.arbiscan.io/tx/0x51380dff63b362bb9a25274542bc8c493c9efbab514e94407a00d86079018b4e#eventlog)
 
 Provide the necessary deployment parameters, including the contract owner's address, Chainlink price feed address, chain ID, and ERC20 token address for fees & for transferring (It can be the same one too, as in this project sample).
 
