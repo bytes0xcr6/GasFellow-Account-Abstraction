@@ -25,8 +25,8 @@ module.exports = {
         process.env.BUNDLER_PRIVATE_KEY,
         process.env.SMART_WALLET_OWNER_PRIVATE_KEY,
       ],
-      gas: 2100000,
-      gasPrice: 10000000000,
+      // gas: 2100000,
+      // gasPrice: 10000000000,
     },
     mainnet: {
       url: process.env.WEB3_HTTP_PROVIDER_MAINNET,
@@ -76,13 +76,13 @@ module.exports = {
       },
     ],
   },
-  // gasReporter: {
-  //   enabled: true,
-  //   // outputFile: "gas-report.txt",
-  //   currency: "EUR", // You can replace it with your desired currency
-  //   gasPrice: 5,
-  //   token: "ARB", // You can replace it with your desired currency
-  //   coinmarketcap: process.env.COINMARKETCAP_API,
-  //   gasPriceApi: process.env.BINANCE_GAS_API,
-  // },
+  gasReporter: {
+    enabled: true,
+    // outputFile: "gas-report.txt",
+    currency: "EUR", // You can replace it with your desired currency
+    gasPrice: 5,
+    token: "ARB", // You can replace it with your desired currency
+    coinmarketcap: process.env.COINMARKETCAP_API,
+    gasPriceApi: process.env.BINANCE_GAS_API,
+  },
 };

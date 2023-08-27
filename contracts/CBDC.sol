@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
+
+// Developed by: Cristian Richarte Gil
 pragma solidity 0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-// Developed by: Cristian Richarte Gil
 contract CBDC is ERC20 {
     address public FED;
     uint256 public interestRates;

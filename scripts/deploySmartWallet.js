@@ -5,14 +5,14 @@ async function main() {
 
   const salt = "0"; // Update it for every new Smart wallet creation for each Signer. It will change the deployed address and it can be precomputed.
   const SmartWalletFactoryAddress =
-    "0x1613B90591c94f5Df81c0F60AFAbd807De491DBb"; // You should replace it with your Wallet Factory Address
+    "0x5Ddaf39509866fD883695C627083BB79694508cB"; // You should replace it with your Wallet Factory Address
 
   const priceFeedProxyAddress = process.env.PRICE_FEED_PROXY;
   const ERC20Address = process.env.ERC20_FEE;
 
   const [Bundler] = await ethers.getSigners();
 
-  console.log("SmartWalletFactoryAddress: ", SmartWalletFactoryAddress);
+  console.log("\nSmartWalletFactoryAddress: ", SmartWalletFactoryAddress);
   console.log("Smart Wallet Owner: ", Owner);
   console.log("Bundler: ", Bundler.address);
 
@@ -22,10 +22,7 @@ async function main() {
   );
 
   const receipt = await SmartWalletFactory.connect(Bundler)
-    .createWallet(Owner, salt, priceFeedProxyAddress, ERC20Address, {
-      gasPrice: await ethers.provider.getGasPrice(),
-      gasLimit: 8500000,
-    })
+    .createWallet(Owner, salt, priceFeedProxyAddress, ERC20Address)
     .then((tx) => tx.wait());
 
   console.log("Event emited: ", receipt.events[0].args);

@@ -30,7 +30,7 @@ describe("smartWallet", function () {
     const typesArgsTransfer = ["address", "uint256"];
     const functionArgsTransfer = [
       WalletOwnerPublicKey,
-      ethers.utils.parseEther("1"),
+      (1000 * 10 ** 8).toString(),
     ];
 
     // USDC Balance:
@@ -43,24 +43,24 @@ describe("smartWallet", function () {
     const typesArgsApprove = ["address", "uint256"];
     const functionArgsApprove = [
       WalletOwnerPublicKey,
-      ethers.utils.parseEther("1"),
+      (1000 * 10 ** 8).toString(),
     ];
 
     const feeData = await ethers.provider.getFeeData();
 
     // Fill up Bundler for fees
-    const tx1BNB = {
+    const tx1ARB = {
       to: Bundler.address,
       value: ethers.utils.parseEther("0.0001"),
     };
-    const tx2BNB = {
+    const tx2ARB = {
       to: Bundler.address,
       value: ethers.utils.parseEther("0.0001"),
     };
-    await Bundler.sendTransaction(tx1BNB);
-    await Bundler.sendTransaction(tx2BNB);
+    await Bundler.sendTransaction(tx1ARB);
+    await Bundler.sendTransaction(tx2ARB);
     console.log(
-      `- USDC Whale transferred ${tx2BNB.value}ARB to Bundler and USDC Whale`
+      `- USDC Whale transferred ${tx2ARB.value}ARB to Bundler and USDC Whale`
     );
 
     const ERC20_Fee = await ethers.getContractAt("CBDC", Token_Fee_Address);
@@ -123,7 +123,7 @@ describe("smartWallet", function () {
 
     await ERC20_Fee.connect(Bundler).transfer(
       smartWallet.address,
-      ethers.utils.parseUnits("10000", "ether")
+      (10000 * 10 ** 8).toString()
     );
 
     const balanceUSDCaccount = await ERC20_Fee.balanceOf(smartWallet.address);
@@ -176,7 +176,7 @@ describe("smartWallet", function () {
     expect(userProfile.accountAddress).to.equal(smartWallet.address);
   });
 
-  it("Transfer Value from the Smart Wallet (BNB)", async () => {
+  it("Transfer Value from the Smart Wallet (ARB)", async () => {
     const { userProfile, smartWallet, Bundler, ARB_Whale } = await loadFixture(
       deployContracts
     );
@@ -188,15 +188,15 @@ describe("smartWallet", function () {
 
     await ARB_Whale.sendTransaction(ARBtopUp);
 
-    const WalletBNBbalanceBefore = await ethers.provider.getBalance(
+    const WalletARBbalanceBefore = await ethers.provider.getBalance(
       userProfile.accountAddress
     );
-    const SignerBNBbalanceBefore = await ethers.provider.getBalance(
+    const SignerARBbalanceBefore = await ethers.provider.getBalance(
       userProfile.owner
     );
     console.log(
-      "BNB Balance Wallet AfterARB Topped up: ",
-      ethers.utils.formatEther(WalletBNBbalanceBefore)
+      "ARB Balance Wallet AfterARB Topped up: ",
+      ethers.utils.formatEther(WalletARBbalanceBefore)
     );
 
     ARBtransferRes = await getValueTxSignatureAndValidate(
@@ -222,33 +222,33 @@ describe("smartWallet", function () {
 
     await Tx.wait();
 
-    const WalletBNBbalanceAfter = await ethers.provider.getBalance(
+    const WalletARBbalanceAfter = await ethers.provider.getBalance(
       userProfile.accountAddress
     );
-    const SignerBNBbalanceAfter = await ethers.provider.getBalance(
+    const SignerARBbalanceAfter = await ethers.provider.getBalance(
       userProfile.owner
     );
 
     console.log(
-      "- WalletBNBbalanceBefore: ",
-      ethers.utils.formatEther(WalletBNBbalanceBefore)
+      "- WalletARBbalanceBefore: ",
+      ethers.utils.formatEther(WalletARBbalanceBefore)
     );
     console.log(
-      "- WalletBNBbalanceAfter",
-      ethers.utils.formatEther(WalletBNBbalanceAfter)
+      "- WalletARBbalanceAfter",
+      ethers.utils.formatEther(WalletARBbalanceAfter)
     );
 
     console.log(
-      "\n- SignerBNBbalanceBefore: ",
-      ethers.utils.formatEther(SignerBNBbalanceBefore)
+      "\n- SignerARBbalanceBefore: ",
+      ethers.utils.formatEther(SignerARBbalanceBefore)
     );
     console.log(
-      "- SignerBNBbalanceAfter",
-      ethers.utils.formatEther(SignerBNBbalanceAfter)
+      "- SignerARBbalanceAfter",
+      ethers.utils.formatEther(SignerARBbalanceAfter)
     );
 
-    expect(WalletBNBbalanceAfter).to.be.lessThan(WalletBNBbalanceBefore);
-    expect(SignerBNBbalanceBefore).to.be.lessThan(SignerBNBbalanceAfter);
+    expect(WalletARBbalanceAfter).to.be.lessThan(WalletARBbalanceBefore);
+    expect(SignerARBbalanceBefore).to.be.lessThan(SignerARBbalanceAfter);
   });
 
   it("If Sponsored is true, None USDC should be transferred", async () => {
@@ -526,7 +526,7 @@ describe("smartWallet", function () {
 
     expect(resultDecoded[0]).to.equal(true);
   });
-
+  1490338.36014371;
   it("Transfer USDC from the Smart Account to Bundler", async function () {
     const {
       smartWallet,
@@ -590,7 +590,7 @@ describe("smartWallet", function () {
     } = await loadFixture(deployContracts);
 
     const balanceUSDCBefore = await ERC20_Fee.balanceOf(smartWallet.address);
-    const balanceBNBBefore = await ethers.provider.getBalance(Bundler.address);
+    const balanceARBBefore = await ethers.provider.getBalance(Bundler.address);
     const USDCBeforeFeeReceived = await ERC20_Fee.balanceOf(Bundler.address);
     const approvalRes = await getSignatureAndValidate(
       smartWallet,
@@ -631,10 +631,10 @@ describe("smartWallet", function () {
       ethers.utils.formatUnits(balanceUSDCAfter, "wei") -
       ethers.utils.formatUnits(balanceUSDCBefore, "wei");
 
-    const balanceBNBAfter = await ethers.provider.getBalance(Bundler.address);
-    ARBresult = balanceBNBBefore - balanceBNBAfter;
-    console.log("balanceBNBAfter", ethers.utils.formatEther(balanceBNBAfter));
-    console.log("balanceBNBBefore", ethers.utils.formatEther(balanceBNBBefore));
+    const balanceARBAfter = await ethers.provider.getBalance(Bundler.address);
+    ARBresult = balanceARBBefore - balanceARBAfter;
+    console.log("balanceARBAfter", ethers.utils.formatEther(balanceARBAfter));
+    console.log("balanceARBBefore", ethers.utils.formatEther(balanceARBBefore));
     console.log(
       "\n- BALANCE USDC BEFORE: " + ethers.utils.formatUnits(balanceUSDCBefore)
     );
@@ -642,10 +642,10 @@ describe("smartWallet", function () {
       "- BALANCE USDC AFTER: " + ethers.utils.formatUnits(balanceUSDCAfter)
     );
     console.log(
-      "\n- BALANCEARB BEFORE: " + ethers.utils.formatUnits(balanceBNBBefore)
+      "\n- BALANCEARB BEFORE: " + ethers.utils.formatUnits(balanceARBBefore)
     );
     console.log(
-      "- BALANCEARB AFTER: " + ethers.utils.formatUnits(balanceBNBAfter)
+      "- BALANCEARB AFTER: " + ethers.utils.formatUnits(balanceARBAfter)
     );
     console.log(
       `\n- User transferred ${ethers.utils.formatUnits(
@@ -656,16 +656,14 @@ describe("smartWallet", function () {
     const USDCFeesPaid = Number(functionArgsTransfer[1]) + USDCresult;
     const USDCAfterFeeReceived = await ERC20_Fee.balanceOf(Bundler.address);
     console.log(
-      `\n- User just Transferred and spent a Fee of  ${ethers.utils.formatEther(
-        USDCFeesPaid.toString()
-      )} USDCs`
+      `\n- User just Transferred and spent a Fee of  ${
+        USDCFeesPaid / 10 ** 10
+      } USDCs`
     );
 
     console.log(
       "- Bundler got refunded in USDC as fee: ",
-      ethers.utils.formatEther(
-        (USDCAfterFeeReceived - USDCBeforeFeeReceived).toString()
-      )
+      (USDCAfterFeeReceived - USDCBeforeFeeReceived) / 10 ** 10
     );
     console.log(
       `- Bundler just paid a Fee of -${ethers.utils.formatEther(
