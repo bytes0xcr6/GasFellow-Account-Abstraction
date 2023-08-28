@@ -54,7 +54,7 @@ In this way to use Account Abstraction we do not need an Entry point and a Payma
 
    ```sh
    git clone https://github.com/CristianRicharte6/GasFellow-Account-Abstraction.git
-   cd Account-Abstraction
+   cd GasFellow-Account-Abstraction
 
    ```
 
