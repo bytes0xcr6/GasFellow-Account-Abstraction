@@ -1,6 +1,6 @@
-# Account-Abstraction (ERC-20 for paying Gas Fee) 
+# GasFellow - Account-Abstraction Library
 
-Account Abstraction Library for deploying Smart Wallets and paying chain fees in any ERC-20.
+GasFellow is an Account Abstraction Library for deploying Smart Wallets and paying chain fees in any ERC-20 or even sponsor gas fee for users.
 
 ![image](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/57a92498-e657-442c-a0ed-94488b82677f)
 _Example of Transferring 1.000 eUSD and charging 0.00128788 as fee (Refund for Bundler). The Smart Wallet does not own the native chain currency._ [ArbiScan ERC20 Transfer receipt](https://goerli.arbiscan.io/tx/0x33aef128dd49a63af12981e9dff6a13c5d933d183b090dc05c763d3aa4f354ea)
@@ -10,6 +10,7 @@ _Example of Transferring 1.000 eUSD and charging 0.00128788 as fee (Refund for B
 ## Overview
 
 The Smart Wallet with Account Abstraction is a Solidity smart contract that introduces a new way for users to execute transactions by paying the Gas fees in any ERC20 token or even have fees sponsored by a Bundler. This is an alternative where the only participants are:
+
 - User (EOA to sign transactions)
 - Bundler (EOA to add Transactions on chain, pay Gas Fees & Sponsor gas fees or get refunded in ERC20 token)
 - Smart Wallet (Smart contract where the User will keep all his assets and privileges)
@@ -85,8 +86,9 @@ Deploy the SmartWallet contract to your desired blockchain using your chosen dev
    ```sh
    npx hardhat run scripts/deploySmartWallet.js --network NETWORK_NAME
    ```
+
    ![image](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/828f2f6d-5df5-4539-935e-77c01ece567a)
-[ArbiScan Deployment receipt](https://goerli.arbiscan.io/tx/0x51380dff63b362bb9a25274542bc8c493c9efbab514e94407a00d86079018b4e#eventlog)
+   [ArbiScan Deployment receipt](https://goerli.arbiscan.io/tx/0x51380dff63b362bb9a25274542bc8c493c9efbab514e94407a00d86079018b4e#eventlog)
 
 Provide the necessary deployment parameters, including the contract owner's address, Chainlink price feed address, chain ID, and ERC20 token address for fees & for transferring (It can be the same one too, as in this project sample).
 
@@ -98,27 +100,20 @@ The Smart Wallet contract allows users to execute transactions and pay fees in E
    <details>
       
    <summary>Check the Smart Wallet deployment flow diagram.</summary>
-   
+
    ![deployment](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/8198c34c-7504-41e7-9d08-e77643c8ce18)
 
    </details>
-
-
 
 2. Interact with the contract by calling its functions for single (`HandleOp`) or batch (`HandleOps`) transaction execution. This functions can be called by any Bundler or by the Smart Wallet owner. Also, they can choose if they would like to send the Transaction sponsored (The bundler takes care of the gas fees) or not sponsored (The Smart wallet will refund the fees in the ERC20 set for fees).
 
    <details>
 
-
    <summary>Check the Smart Wallet Transaction flow diagram.</summary>
-   
+
    ![AA transaction flow](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/4bb6894f-9e11-452f-b009-1d7a3cdce904)
 
-   
    </details>
-
-
-
 
 Interact with the Smart wallet by signing and sending the Tx on chain. An example of usability is the script `singleTransferSmartWallet.js`.
 

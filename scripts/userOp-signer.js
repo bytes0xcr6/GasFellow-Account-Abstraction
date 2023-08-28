@@ -38,7 +38,7 @@ async function signMessage(hashedMessage, privateKey) {
 }
 
 async function getSignatureAndValidate(
-  basicWallet,
+  smartWallet,
   signerPrivateKey,
   functionId,
   typesArgs,
@@ -58,7 +58,7 @@ async function getSignatureAndValidate(
   let signature = await signMessage(userOpHash, signerPrivateKey);
 
   if (
-    await basicWallet.verifySignature(target, callData, value, nonce, signature)
+    await smartWallet.verifySignature(target, callData, value, nonce, signature)
   ) {
     return { callData, signature };
   }
@@ -66,7 +66,7 @@ async function getSignatureAndValidate(
 }
 
 async function getValueTxSignatureAndValidate(
-  basicWallet,
+  smartWallet,
   signerPrivateKey,
   receiver,
   value,
@@ -84,7 +84,7 @@ async function getValueTxSignatureAndValidate(
   let signature = await signMessage(userOpHash, signerPrivateKey);
 
   if (
-    await basicWallet.verifySignature(
+    await smartWallet.verifySignature(
       receiver,
       callData,
       value,
