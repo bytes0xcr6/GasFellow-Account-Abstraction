@@ -53,7 +53,7 @@ In this way to use Account Abstraction we do not need an Entry point and a Payma
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/CristianRicharte6/Account-Abstraction.git
+   git clone https://github.com/CristianRicharte6/GasFellow-Account-Abstraction.git
    cd Account-Abstraction
 
    ```
