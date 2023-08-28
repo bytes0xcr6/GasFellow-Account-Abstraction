@@ -9,7 +9,13 @@ _Example of Transferring 1.000 eUSD and charging 0.00128788 as fee (Refund for B
 
 ## Overview
 
-The Smart Wallet with Account Abstraction is a Solidity smart contract that introduces a new way for users to execute transactions by paying the Gas fees in any ERC20 token or even have fees sponsored by a Bundler.
+The Smart Wallet with Account Abstraction is a Solidity smart contract that introduces a new way for users to execute transactions by paying the Gas fees in any ERC20 token or even have fees sponsored by a Bundler. This is an alternative where the only participants are:
+- User (EOA to sign transactions)
+- Bundler (EOA to add Transactions on chain, pay Gas Fees & Sponsor gas fees or get refunded in ERC20 token)
+- Smart Wallet (Smart contract where the User will keep all his assets and privileges)
+- Smart Wallet Factory (Smart contract to deploy Smart Wallets to a precomputed address by using CREATE2 & salt)
+
+In this way to use Account Abstraction we do not need an Entry point and a Paymaster, as it is expected for internal use & not for using third party software.
 
 ## Features
 
@@ -88,9 +94,31 @@ Provide the necessary deployment parameters, including the contract owner's addr
 
 The Smart Wallet contract allows users to execute transactions and pay fees in ERC20 tokens. Here's a basic example of how to use the contract:
 
-Deploy the contract.
+1. Deploy the Smart Wallet contract.
+   <details>
+      
+   <summary>Check the Smart Wallet deployment flow diagram.</summary>
+   
+   ![deployment](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/8198c34c-7504-41e7-9d08-e77643c8ce18)
 
-Interact with the contract by calling its functions for single (`HandleOp`) or batch (`HandleOps`) transaction execution. This functions can be called by any Bundler or by the Smart Wallet owner. Also, they can choose if they would like to send the Transaction sponsored (The bundler takes care of the gas fees) or not sponsored (The Smart wallet will refund the fees in the ERC20 set for fees).
+   </details>
+
+
+
+2. Interact with the contract by calling its functions for single (`HandleOp`) or batch (`HandleOps`) transaction execution. This functions can be called by any Bundler or by the Smart Wallet owner. Also, they can choose if they would like to send the Transaction sponsored (The bundler takes care of the gas fees) or not sponsored (The Smart wallet will refund the fees in the ERC20 set for fees).
+
+   <details>
+
+
+   <summary>Check the Smart Wallet Transaction flow diagram.</summary>
+   
+   ![AA transaction flow](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/4bb6894f-9e11-452f-b009-1d7a3cdce904)
+
+   
+   </details>
+
+
+
 
 Interact with the Smart wallet by signing and sending the Tx on chain. An example of usability is the script `singleTransferSmartWallet.js`.
 
