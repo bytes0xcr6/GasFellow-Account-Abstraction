@@ -227,10 +227,12 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
             (10 ** ERC20Token.decimals());
         uint256 ERC20Fee = (gasReceipt * uint256(getLatestPrice())) /
             (10 ** ERC20Token.decimals());
-        ERC20Token.transfer(
+        // Important to check returns as it can interact with any ERC20.
+        bool success = ERC20Token.transfer(
             msg.sender,
             ERC20Fee + ((ERC20Fee * protocolFee) / 100)
         );
+        require(success, "Failed erc20 transfer");
         emit postOpFinished(ERC20Fee, gasReceipt);
     }
 
