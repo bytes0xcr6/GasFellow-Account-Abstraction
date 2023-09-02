@@ -1,38 +1,56 @@
 // SPDX-License-Identifier: MIT
-
-// Developed by: Cristian Richarte Gil
 pragma solidity 0.8.19;
 
+// Importing ERC721Holder from OpenZeppelin contracts
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+// Importing ERC1155Holder from OpenZeppelin contracts
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
+// Importing AggregatorV3Interface from Chainlink contracts
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+// Importing IERC20Extended interface
 import "./interfaces/IERC20Extended.sol";
-
-// import "hardhat/console.sol";
 
 /**
  * @title SmartWallet
+ * @author Cristian Richarte Gil
  * @dev A smart contract that facilitates transaction execution and fee payment using ERC20 tokens.
  */
 contract SmartWallet is ERC721Holder, ERC1155Holder {
+    // Chainlink price feed interface
     AggregatorV3Interface internal immutable priceFeed;
 
+    // Hashed name constant for the ERC20 Fee Smart Account
     bytes32 private constant _HASHED_NAME =
         keccak256("ERC20 Fee Smart Account");
 
+    // Version constant for the Smart Wallet
     string public constant version = "1.0";
 
-    address payable public immutable owner; // Transaction signer and Wallet Owner
-    uint64 private immutable CHAIN_ID; // Chain ID for the Blockchain your are deploying the Smart Wallet
-    IERC20 private immutable ERC20Token; // Desired ERC20 token address to pay for fees
-    uint256 public nonce; // Incremental Nonce for eache Smart Wallet Transaction
+    // Owner of the Smart Wallet
+    address payable public immutable owner; 
+    // Chain ID for the Blockchain your are deploying the Smart Wallet
+    uint64 private immutable CHAIN_ID; 
+    // Desired ERC20 token address to pay for fees
+    IERC20 private immutable ERC20Token; 
+    // Incremental Nonce for each Smart Wallet Transaction
+    uint256 public nonce; 
 
-    uint8 constant protocolFee = 20; // Protocol fee % to avoid lossing for Exchange rate.
+    // Protocol fee % to avoid lossing for Exchange rate.
+    uint8 constant protocolFee = 20; 
 
-    uint256 private constant POST_OP_GAS = 51494; // Estimated Gas spent for ERC-20 Transfer
+    // Estimated Gas spent for ERC-20 Transfer
+    uint256 private constant POST_OP_GAS = 51494; 
 
+    // Event emitted after operation is finished
     event postOpFinished(uint256 ERC20Receipt, uint256 gasReceipt);
 
+    /**
+     * @dev Constructor for the Smart Wallet
+     * @param _owner The owner of the Smart Wallet
+     * @param priceFeedProxy The address of the price feed proxy
+     * @param chainId The chain ID of the blockchain
+     * @param ERC20 The address of the ERC20 token for fee payment
+     */
     constructor(
         address _owner,
         address priceFeedProxy,
@@ -49,6 +67,12 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Verifies if the provided signature is valid for the given transaction details.
+     * @param target The target address of the transaction
+     * @param callData The call data of the transaction
+     * @param value The value of the transaction
+     * @param _nonce The nonce of the transaction
+     * @param signature The signature of the transaction
+     * @return bool Returns true if the signature is valid
      */
     function verifySignature(
         address target,
@@ -65,6 +89,11 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Computes the hash of the transaction message for signature verification.
+     * @param target The target address of the transaction
+     * @param callData The call data of the transaction
+     * @param value The value of the transaction
+     * @param _nonce The nonce of the transaction
+     * @return bytes32 Returns the message hash
      */
     function getMessageHash(
         address target,
@@ -85,6 +114,8 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Computes the hash of the message for creating an Ethereum signed message.
+     * @param _messageHash The message hash
+     * @return bytes32 Returns the Ethereum signed message hash
      */
     function getEthSignedMessageHash(
         bytes32 _messageHash
@@ -100,6 +131,9 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Recovers the signer's address from a given signature.
+     * @param _ethSignedMessageHash The Ethereum signed message hash
+     * @param _signature The signature
+     * @return address Returns the address of the signer
      */
     function recoverSigner(
         bytes32 _ethSignedMessageHash,
@@ -112,6 +146,10 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Splits the signature into its components.
+     * @param sig The signature
+     * @return r bytes32 Returns the r component of the signature
+     * @return s bytes32 Returns the s component of the signature
+     * @return v uint8 Returns the v component of the signature
      */
     function splitSignature(
         bytes memory sig
@@ -129,6 +167,12 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Executes a single transaction and handles fee payment.
+     * @param target The target address of the transaction
+     * @param value The value of the transaction
+     * @param callData The call data of the transaction
+     * @param signature The signature of the transaction
+     * @param gasPrice The gas price for the transaction
+     * @param isSponsored If set as true, no ERC20 refund is required
      */
     function handleOp(
         address target,
@@ -149,6 +193,12 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Executes multiple transactions and handles fee payment.
+     * @param target The target addresses of the transactions
+     * @param value The values of the transactions
+     * @param callData The call data of the transactions
+     * @param signature The signatures of the transactions
+     * @param gasPrice The gas price for the transactions
+     * @param isSponsored If set as true, no ERC20 refund is required
      */
     function handleOps(
         address[] memory target,
@@ -180,6 +230,12 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Executes a single operation by verifying the signature and calling the target.
+     * @param target The target address of the transaction
+     * @param value The value of the transaction
+     * @param callData The call data of the transaction
+     * @param signature The signature of the transaction
+     * @param _nonce The nonce of the transaction
+     * @return bytes memory Returns the result of the call
      */
     function executeOp(
         address target,
@@ -204,6 +260,10 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Calls the target contract with the provided data and value.
+     * @param target The target address of the call
+     * @param value The value of the call
+     * @param data The data of the call
+     * @return bytes memory Returns the result of the call
      */
     function _call(
         address target,
@@ -221,6 +281,8 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Handles post-operation logic, including fee payment in ERC20 tokens.
+     * @param gasUsed The gas used for the operation
+     * @param gasPrice The gas price for the operation
      */
     function postOp(uint256 gasUsed, uint256 gasPrice) internal {
         uint256 gasReceipt = ((((gasUsed + POST_OP_GAS))) * (gasPrice)) /
@@ -238,6 +300,7 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
 
     /**
      * @dev Returns the latest price of ARB to the ERC20 Set.
+     * @return int Returns the latest price
      */
     function getLatestPrice() internal view returns (int) {
         (
@@ -251,5 +314,8 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
         return price;
     }
 
+    /**
+     * @dev Function to receive Ether
+     */
     receive() external payable {}
 }
