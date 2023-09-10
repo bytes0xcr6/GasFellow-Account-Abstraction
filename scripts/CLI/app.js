@@ -48,7 +48,7 @@ async function main() {
   console.log(`- Smart Wallet Factory to: ${WalletFactory.address}`)
   console.log(`- Smart Wallet to: ${SmartWallet.address}`)
 
-  const transferRes = await CBDC.connect(Bundler).transfer(SmartWallet.address, ethers.utils.parseEther("10000"), {
+  const transferRes = await CBDC.connect(Bundler).transfer(SmartWallet.address, 1000 *10**8, {
     gasPrice: 5000000000
   })
   await transferRes.wait();
