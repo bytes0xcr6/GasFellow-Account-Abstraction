@@ -82,7 +82,7 @@ module.exports = {
     currency: "EUR", // You can replace it with your desired currency
     gasPrice: 5,
     token: "ARB", // You can replace it with your desired currency
-    coinmarketcap: process.env.COINMARKETCAP_API,
-    gasPriceApi: process.env.BINANCE_GAS_API,
+    // coinmarketcap: process.env.COINMARKETCAP_API,
+    // gasPriceApi: process.env.BINANCE_GAS_API,
   },
 };

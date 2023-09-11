@@ -1,4 +1,11 @@
 {
+  "name": "GasFellow-Account-Abstraction",
+  "version": "0.8.0",
+  "description": "npm scripts example",
+  "author": "Cristian Richarte Gil",
+  "scripts": {
+    "demo": "node scripts/CLI/app.js"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "@nomiclabs/hardhat-etherscan": "^3.1.7",

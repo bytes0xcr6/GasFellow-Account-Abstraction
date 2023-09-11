@@ -1,4 +1,4 @@
-# GasFellow - Account-Abstraction Library
+# GasFellow - Account-Abstraction Library & CLI Demo
 
 GasFellow is an Account Abstraction Library for deploying Smart Wallets and paying chain fees in any ERC-20 or even sponsor gas fee for users.
 
@@ -17,6 +17,13 @@ The Smart Wallet with Account Abstraction is a Solidity smart contract that intr
 - Smart Wallet Factory (Smart contract to deploy Smart Wallets to a precomputed address by using CREATE2 & salt)
 
 In this way to use Account Abstraction we do not need an Entry point and a Paymaster, as it is expected for internal use & not for using third party software.
+
+## Try it with a quick Demo using the CLI! 
+
+```sh
+   npm run CLI
+```
+**IMPORTANT**: For this demo, we will use the Binance Smart chain testnet. Please, make sure you have set up the .env and have enough Test BNB in the Bundler´s Balance.
 
 ## Features
 
@@ -93,6 +100,13 @@ Deploy the SmartWallet contract to your desired blockchain using your chosen dev
 Provide the necessary deployment parameters, including the contract owner's address, Chainlink price feed address, chain ID, and ERC20 token address for fees & for transferring (It can be the same one too, as in this project sample).
 
 ## Usage
+
+#### Try it with a quick Demo using the CLI! 
+
+```sh
+   npm run CLI
+```
+**IMPORTANT**: For this demo, we will use the Binance Smart chain testnet. Please, make sure you have set up the .env and have enough Test BNB in the Bundler´s Balance.
 
 The Smart Wallet contract allows users to execute transactions and pay fees in ERC20 tokens. Here's a basic example of how to use the contract:
 

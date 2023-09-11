@@ -9,7 +9,9 @@ async function main(Bundler, feeData) {
   const cbdc = await CBDC.deploy(
     "USD_CBDC",
     "eUSD",
-    (trillion * 10 ** 8).toString(), {gasPrice: 5000000000}
+    (trillion * 10 ** 8).toString(), {
+      gasPrice: 5000000000
+    }
   );
   await cbdc.deployed();
 

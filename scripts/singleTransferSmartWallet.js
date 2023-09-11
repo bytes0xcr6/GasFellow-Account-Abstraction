@@ -1,5 +1,9 @@
-const { ethers } = require("hardhat");
-const { getSignatureAndValidate } = require("./userOp-signer");
+const {
+  ethers
+} = require("hardhat");
+const {
+  getSignatureAndValidate
+} = require("./userOp-signer");
 
 const WalletOwnerPrivateKey = process.env.SMART_WALLET_OWNER_PRIVATE_KEY;
 
@@ -17,7 +21,7 @@ async function main() {
   const typesArgsTransfer = ["address", "uint256"];
   const functionArgsTransfer = [
     receiverERC20Address,
-    (1000 * 10 ** (await ERC20TokenFee.decimals())).toString(),
+    (10 * 10 ** (await ERC20TokenFee.decimals())).toString(),
   ];
 
   console.log("Balance: ", await ERC20TokenFee.balanceOf(smartWalletAddress));
@@ -78,7 +82,9 @@ async function main() {
       transferRes.callData,
       transferRes.signature,
       gasPrice,
-      false
+      false, {
+        gasPrice: 5000000000
+      }
     );
 
   const receipt = await Tx.wait();

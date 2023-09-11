@@ -24,7 +24,6 @@ async function main(WalletOwnerPrivateKey, smartWalletAddress, receiverERC20Addr
     smartWalletAddress, Bundler
   );
 
-  console.log("trying to sign transaction")
   const transferRes = await getSignatureAndValidate(
     smartWallet,
     WalletOwnerPrivateKey,
@@ -67,17 +66,10 @@ async function main(WalletOwnerPrivateKey, smartWalletAddress, receiverERC20Addr
       }
     );
 
-  const receipt = await Tx.wait();
+  // const receipt = await Tx.wait();
   // console.log("\nTransfer ERC20 Receipt: ", receipt);
-  return receipt;
+  return Tx;
 }
-
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-// main().catch((error) => {
-//   console.error(error);
-//   process.exitCode = 1;
-// });
 
 module.exports = {
   main
