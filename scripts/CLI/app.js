@@ -59,15 +59,15 @@ async function main() {
   let receiver = "";
 
   while (receiver === "") {
-    console.log("\nLet's do a Demo of how to transfer 100 eUSD without the need of having the Chain Native token.")
+    console.log("\nLet's do a Demo of how to transfer 100 eUSD without the need for having the Native Chain token.")
     receiver = String(prompt("  📩 Add the receiver Public key: "))
   }
 
-  let confirmation = String(prompt("\nYou are about to send 10 eUSD and pay Gas Fee in eUSD. Are you excited? (Yes / No)"))
+  let confirmation = String(prompt("\nYou are about to send 10 eUSD and pay the Gas Fee in eUSD. Are you excited? (Yes / No)"))
   if (confirmation.toUpperCase() === "YES") {
     console.log("\nLet's gooo!👾")
   } else if (confirmation.toUpperCase() === "NO") {
-    console.log("\nYou will be impressed after you try!😎")
+    console.log("\nLet´s do it anyway, you will be impressed once you try!😎")
   } else {
     console.log("\nI didn't understand, but let`s show you how Gas Fellow can do magic!🪄 ")
   }
@@ -76,7 +76,7 @@ async function main() {
 
   if (!receipt) return
   console.log(receipt)
-  console.log('\nCongrats!🎊 You have completed your first transaction without having the Chain Native token and paying fees in eUSD')
+  console.log('\nCongrats!🎊 You have completed your first transaction without needing the Native Chain token and paying fees in eUSD')
   console.log(`\nCheck the transaction receipt in the chain scanner by adding the Transaction Hash.`)
   console.log(`Transaction Hash: ${receipt.transactionHash}`)
 
