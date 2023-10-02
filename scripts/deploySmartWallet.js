@@ -1,4 +1,6 @@
-const { ethers } = require("hardhat");
+const {
+  ethers
+} = require("hardhat");
 
 async function main() {
   const Owner = process.env.SMART_WALLET_OWNER_PUBLIC_KEY;

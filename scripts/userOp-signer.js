@@ -1,9 +1,11 @@
 const ethers = require("ethers");
-
-const CHAIN_ID = process.env.CHAIN_ID;
+const {
+  Provider
+} = require("./config");
 
 // 1. Get CallData before hashing.
 function getCallData(functionId, typesArgs, functionArgs) {
+
   // Function selector for the function you want to call
   let functionSelector = ethers.utils.id(functionId); // ERC-20 transfer
   let formatedFunctionSelector = functionSelector.substring(0, 10);
@@ -20,11 +22,11 @@ function getCallData(functionId, typesArgs, functionArgs) {
 }
 
 // 2. Hash Transaction Data.
-function getUserOperationHashed(target, nonce, callData, value, CHAIN_ID) {
+function getUserOperationHashed(target, nonce, callData, value, chainId) {
   let abiCoder = new ethers.utils.AbiCoder();
   let packedData = abiCoder.encode(
     ["address", "uint256", "bytes", "uint256", "uint256"],
-    [target, nonce, callData, value, CHAIN_ID]
+    [target, nonce, callData, value, chainId]
   );
   let messageHash = ethers.utils.keccak256(packedData);
   return ethers.utils.arrayify(messageHash);
@@ -48,19 +50,24 @@ async function getSignatureAndValidate(
   nonce
 ) {
   let callData = getCallData(functionId, typesArgs, functionArgs);
+  const chain = await Provider.detectNetwork();
+
   let userOpHash = getUserOperationHashed(
     target,
     nonce,
     callData,
     value,
-    CHAIN_ID
+    chain.chainId
   );
   let signature = await signMessage(userOpHash, signerPrivateKey);
 
   if (
     await smartWallet.verifySignature(target, callData, value, nonce, signature)
   ) {
-    return { callData, signature };
+    return {
+      callData,
+      signature
+    };
   }
   throw "\n- ❌ Signature error...";
 }
@@ -78,7 +85,7 @@ async function getValueTxSignatureAndValidate(
     nonce,
     callData,
     value,
-    CHAIN_ID
+    chainId
   );
 
   let signature = await signMessage(userOpHash, signerPrivateKey);
@@ -92,7 +99,10 @@ async function getValueTxSignatureAndValidate(
       signature
     )
   ) {
-    return { callData, signature };
+    return {
+      callData,
+      signature
+    };
   }
   throw "\n- ❌ Signature error...";
 }

@@ -4,8 +4,11 @@ const {
 const {
   getSignatureAndValidate
 } = require("../userOp-signer");
+const {
+  Bundler
+} = require("../config");
+async function main(WalletOwnerPrivateKey, smartWalletAddress, receiverERC20Address, ERC20TokenAddress, Provider) {
 
-async function main(WalletOwnerPrivateKey, smartWalletAddress, receiverERC20Address, ERC20TokenAddress, Bundler, Provider) {
 
   const ERC20TokenFee = await ethers.getContractAt("CBDC", ERC20TokenAddress, Bundler);
 
@@ -53,6 +56,7 @@ async function main(WalletOwnerPrivateKey, smartWalletAddress, receiverERC20Addr
     return null;
   }
 
+
   const Tx = await smartWallet
     .connect(Bundler)
     .handleOp(
@@ -66,9 +70,8 @@ async function main(WalletOwnerPrivateKey, smartWalletAddress, receiverERC20Addr
       }
     );
 
-  // const receipt = await Tx.wait();
-  // console.log("\nTransfer ERC20 Receipt: ", receipt);
-  return Tx;
+  const receipt = await Tx.wait();
+  return receipt;
 }
 
 module.exports = {
