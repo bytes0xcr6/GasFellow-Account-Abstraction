@@ -4,18 +4,21 @@ const {
 const {
   getSignatureAndValidate
 } = require("./userOp-signer");
-
-const WalletOwnerPrivateKey = process.env.SMART_WALLET_OWNER_PRIVATE_KEY;
-const chainId = process.env.CHAIN_ID;
+const {
+  Owner,
+  CHAIN_ID,
+  priceFeedProxyAddress,
+  ERC20Address,
+  WalletOwnerPrivateKey
+} = require("../config")
 
 const smartWalletAddress = "0x040Aa3B42D136aB523BF614659d99bF2D98B8D65"; // Replace with the Smart wallet to interact.
 const receiverERC20Address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; // Replace with the Address to transfer ERC20 token.
 
 // Token to Transfer (No Fee, but it could be too. As in this case).
-const ERC20TokenAddress = process.env.ERC20_FEE;
 
 async function main() {
-  const ERC20TokenFee = await ethers.getContractAt("CBDC", ERC20TokenAddress);
+  const ERC20TokenFee = await ethers.getContractAt("CBDC", ERC20Address);
 
   // ERC20 Transfer:
   const functionIdTransfer = "transfer(address,uint256)";
@@ -52,10 +55,10 @@ async function main() {
     functionIdTransfer,
     typesArgsTransfer,
     functionArgsTransfer,
-    ERC20TokenAddress,
+    ERC20Address,
     0,
     await smartWallet.nonce(),
-    chainId
+    CHAIN_ID
   );
   console.log("\n- ✅ transferERC20 Tx signature: ", transferRes.signature);
   console.log("\n- ✅ transferERC20 Tx callData: ", transferRes.callData);
@@ -79,7 +82,7 @@ async function main() {
   const Tx = await smartWallet
     .connect(Bundler)
     .handleOp(
-      ERC20TokenAddress,
+      ERC20Address,
       0,
       transferRes.callData,
       transferRes.signature,

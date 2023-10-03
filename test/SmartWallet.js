@@ -12,13 +12,14 @@ const {
   getValueTxSignatureAndValidate,
 } = require("../scripts/userOp-signer");
 
-const chainId = process.env.CHAIN_ID;
-const priceFeedProxyAddress = process.env.PRICE_FEED_PROXY;
-
-const Token_Fee_Address = process.env.ERC20_FEE;
-
-const WalletOwnerPublicKey = process.env.SMART_WALLET_OWNER_PUBLIC_KEY;
-const WalletOwnerPrivateKey = process.env.SMART_WALLET_OWNER_PRIVATE_KEY;
+const {
+  Owner,
+  CHAIN_ID,
+  priceFeedProxyAddress,
+  ERC20Address,
+  WalletOwnerPrivateKey,
+  WalletOwnerPublicKey
+} = require("../config")
 
 c = 1; // How much USDC is 1 ARB?  -NO DECIMALS!
 
@@ -70,16 +71,16 @@ describe("smartWallet", function () {
       `- USDC Whale transferred ${tx2ARB.value}ARB to Bundler and USDC Whale`
     );
 
-    const ERC20_Fee = await ethers.getContractAt("CBDC", Token_Fee_Address);
+    const ERC20_Fee = await ethers.getContractAt("CBDC", ERC20Address);
 
-    const target = Token_Fee_Address;
+    const target = ERC20Address;
     const value = 0; // Value to transfer in ARB
 
     const SmartWalletFactory = await ethers.getContractFactory(
       "SmartWalletFactory"
     );
     const smartWalletFactory = await SmartWalletFactory.connect(Bundler).deploy(
-      chainId
+      CHAIN_ID
     );
     await smartWalletFactory.deployed();
 
@@ -166,7 +167,7 @@ describe("smartWallet", function () {
       value,
       ERC20_Fee,
       ARB_Whale,
-      chainId
+      CHAIN_ID
     };
   }
 
@@ -190,7 +191,7 @@ describe("smartWallet", function () {
       smartWallet,
       Bundler,
       ARB_Whale,
-      chainId
+      CHAIN_ID
     } = await loadFixture(
       deployContracts
     );
@@ -218,7 +219,7 @@ describe("smartWallet", function () {
       WalletOwnerPrivateKey,
       userProfile.owner,
       ethers.utils.parseUnits("0.1", "ether"),
-      await smartWallet.nonce(), chainId
+      await smartWallet.nonce(), CHAIN_ID
 
     );
 
@@ -274,7 +275,7 @@ describe("smartWallet", function () {
       functionIdTransfer,
       typesArgsTransfer,
       functionArgsTransfer,
-      chainId
+      CHAIN_ID
     } = await loadFixture(deployContracts);
 
     const USDCBalanceBefore = await ERC20_Fee.balanceOf(Bundler.address);
@@ -287,7 +288,7 @@ describe("smartWallet", function () {
       functionArgsTransfer,
       ERC20_Fee.address,
       0,
-      await smartWallet.nonce(), chainId
+      await smartWallet.nonce(), CHAIN_ID
     );
 
     await smartWallet
@@ -492,7 +493,7 @@ describe("smartWallet", function () {
       ERC20_Fee,
       target,
       value,
-      chainId
+      CHAIN_ID
     } = await loadFixture(deployContracts);
 
     const balanceRes = await getSignatureAndValidate(
@@ -503,7 +504,7 @@ describe("smartWallet", function () {
       functionArgsBalance,
       ERC20_Fee.address,
       0,
-      await smartWallet.nonce(), chainId
+      await smartWallet.nonce(), CHAIN_ID
     );
 
     await smartWallet.verifySignature(
@@ -526,7 +527,7 @@ describe("smartWallet", function () {
       ERC20_Fee,
       target,
       value,
-      chainId
+      CHAIN_ID
     } = await loadFixture(deployContracts);
 
     const approvalRes = await getSignatureAndValidate(
@@ -537,7 +538,7 @@ describe("smartWallet", function () {
       functionArgsApprove,
       ERC20_Fee.address,
       0,
-      await smartWallet.nonce(), chainId
+      await smartWallet.nonce(), CHAIN_ID
     );
 
     const resultCoded = await smartWallet
@@ -570,7 +571,7 @@ describe("smartWallet", function () {
       feeData,
       target,
       value,
-      chainId
+      CHAIN_ID
     } = await loadFixture(deployContracts);
 
     const balanceBefore = await ERC20_Fee.balanceOf(Bundler.address);
@@ -583,7 +584,7 @@ describe("smartWallet", function () {
       functionArgsTransfer,
       ERC20_Fee.address,
       0,
-      await smartWallet.nonce(), chainId
+      await smartWallet.nonce(), CHAIN_ID
     );
 
     await smartWallet
@@ -620,7 +621,7 @@ describe("smartWallet", function () {
       feeData,
       target,
       value,
-      chainId
+      CHAIN_ID
     } = await loadFixture(deployContracts);
 
     const balanceUSDCBefore = await ERC20_Fee.balanceOf(smartWallet.address);
@@ -635,7 +636,7 @@ describe("smartWallet", function () {
       functionArgsApprove,
       ERC20_Fee.address,
       0,
-      await smartWallet.nonce(), chainId
+      await smartWallet.nonce(), CHAIN_ID
     );
 
     const transferRes = await getSignatureAndValidate(
@@ -646,7 +647,7 @@ describe("smartWallet", function () {
       functionArgsTransfer,
       ERC20_Fee.address,
       0,
-      (await smartWallet.nonce()) + 1, chainId
+      (await smartWallet.nonce()) + 1, CHAIN_ID
     );
 
     await smartWallet

@@ -27,19 +27,19 @@ contract SmartWallet is ERC721Holder, ERC1155Holder {
     string public constant version = "1.0";
 
     // Owner of the Smart Wallet
-    address payable public immutable owner; 
+    address payable public immutable owner;
     // Chain ID for the Blockchain your are deploying the Smart Wallet
-    uint64 private immutable CHAIN_ID; 
+    uint64 private immutable CHAIN_ID;
     // Desired ERC20 token address to pay for fees
-    IERC20 private immutable ERC20Token; 
+    IERC20 private immutable ERC20Token;
     // Incremental Nonce for each Smart Wallet Transaction
-    uint256 public nonce; 
+    uint256 public nonce;
 
     // Protocol fee % to avoid lossing for Exchange rate.
-    uint8 constant protocolFee = 20; 
+    uint8 constant protocolFee = 20;
 
     // Estimated Gas spent for ERC-20 Transfer
-    uint256 private constant POST_OP_GAS = 51494; 
+    uint256 private constant POST_OP_GAS = 51494;
 
     // Event emitted after operation is finished
     event postOpFinished(uint256 ERC20Receipt, uint256 gasReceipt);

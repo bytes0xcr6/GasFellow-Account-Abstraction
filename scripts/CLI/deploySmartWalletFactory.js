@@ -3,7 +3,7 @@ const {
 } = require("hardhat");
 const {
   Provider
-} = require("../config");
+} = require("../../config");
 
 
 

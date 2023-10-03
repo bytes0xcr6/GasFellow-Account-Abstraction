@@ -15,7 +15,7 @@ const {
   SignerPKey,
   Bundler,
   Provider,
-} = require("../config");
+} = require("../../config");
 
 // 1. Add a private key to add a signer for your smart wallet
 // 2. Deploy a Smart Wallet through the Wallet factory (Also, Deploy factory, CBDC and transfer funds to smart wallet)
@@ -60,24 +60,38 @@ async function main() {
     receiver = String(prompt("  📩 Add the receiver Public key: "))
   }
 
-  let confirmation = String(prompt("\nYou are about to send 10 eUSD and pay the Gas Fee in eUSD. Are you excited? (Yes / No)"))
-  if (confirmation.toUpperCase() === "YES") {
+  const BalanceARBbefore = await Provider.getBalance(SmartWallet.address);
+  const BalanceEUSDbefore = (await CBDC.balanceOf(SmartWallet.address)) / 10 ** 8;
+  console.log(`\n - ARB Balance:`, Number(ethers.utils.formatEther(BalanceARBbefore.toString())))
+  console.log(` - eUSD Balance: `, Number(BalanceEUSDbefore))
+
+  let confirmation = String(prompt("\nYou are about to send 10 eUSD and pay the Gas Fee in eUSD. Are you excited? (Y/N)"))
+  if (confirmation.toUpperCase() === "Y") {
     console.log("\nLet's gooo!👾")
-  } else if (confirmation.toUpperCase() === "NO") {
+  } else if (confirmation.toUpperCase() === "N") {
     console.log("\nLet´s do it anyway, you will be impressed once you try!😎")
   } else {
     console.log("\nI didn't understand, but let`s show you how Gas Fellow can do magic!🪄 ")
   }
 
-  const receipt = await transfereUSD.main(SignerPKey, SmartWallet.address, receiver, CBDC.address, Bundler, Provider);
+  const amount = 100; // eUSD amount to transfer 
+  const receipt = await transfereUSD.main(SignerPKey, SmartWallet.address, receiver, CBDC.address, Bundler, Provider, amount);
 
   if (!receipt.transactionHash) {
     console.log("Receipt ", receipt)
     throw new Error("Something went wrong while sending the Transaction");
   }
   console.log('\nCongrats!🎊 You have completed your first transaction without needing the Native Chain token and paying fees in eUSD')
+  const BalanceARBafter = await Provider.getBalance(SmartWallet.address);
+  const BalanceEUSDafter = (await CBDC.balanceOf(SmartWallet.address)) / 10 ** 8;
+  console.log(`\n-🏦 eUSD Balance after transfer: `, Number(await CBDC.balanceOf(SmartWallet.address) / 10 ** 8))
+  console.log(` - 📤eUSD Transferred: `, Number(amount));
+  console.log(` - ⛽eUSD Gas Fee paid: `, Number((BalanceEUSDbefore - BalanceEUSDafter - amount)))
+  console.log(` - 💲ARB paid as fee: `, Number(BalanceARBbefore - BalanceARBafter))
+
+
   console.log(`\nCheck the transaction receipt in the chain scanner by adding the Transaction Hash.`)
-  console.log(`Transaction Hash: ${receipt.transactionHash}`)
+  console.log(`🧾 Transaction Hash: https://goerli.arbiscan.io/tx/${receipt.transactionHash}`)
 
   console.log("\nDeveloped by Cristian Richarte Gil 🥷")
 }

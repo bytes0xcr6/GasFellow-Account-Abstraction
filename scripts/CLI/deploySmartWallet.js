@@ -5,7 +5,7 @@ const {
   Owner,
   priceFeedProxyAddress,
   Provider
-} = require("../config");
+} = require("../../config");
 
 async function main(SmartWalletFactoryAddress, eUSDAddress, Bundler) {
   const chain = await Provider.detectNetwork();

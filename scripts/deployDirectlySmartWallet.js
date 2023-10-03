@@ -1,12 +1,15 @@
-const { ethers } = require("hardhat");
+const {
+  ethers
+} = require("hardhat");
+const {
+  Owner,
+  CHAIN_ID,
+  priceFeedProxyAddress,
+  ERC20Address
+} = require("./config")
 
 // This Script will deploy a Smart Wallet without passing through the Smart Wallet Factory.
 async function main() {
-  const Owner = process.env.SMART_WALLET_OWNER_PUBLIC_KEY;
-  const CHAIN_ID = process.env.CHAIN_ID;
-  const priceFeedProxyAddress = process.env.PRICE_FEED_PROXY;
-  const ERC20Address = process.env.ERC20_FEE;
-
   const signers = await ethers.getSigners();
   const Bundler = signers[0];
 
@@ -18,13 +21,9 @@ async function main() {
     Owner,
     priceFeedProxyAddress,
     CHAIN_ID,
-    ERC20Address,
-    {
-      gasPrice: await ethers.provider.getGasPrice(),
-      gasLimit: 8500000,
-    }
+    ERC20Address
   );
-  await SmartWallet.deployed();
+  await smartWallet.deployed();
 
   console.log(
     `\nBaseAccount for USER ${Owner} deployed to ${smartWallet.address}`

@@ -1,7 +1,10 @@
-const { ethers } = require("hardhat");
-
+const {
+  ethers
+} = require("hardhat");
+const {
+  CHAIN_ID
+} = require("../config")
 async function main() {
-  const CHAIN_ID = process.env.CHAIN_ID;
   const [Bundler] = await ethers.getSigners();
 
   const SmartWalletFactory = await ethers.getContractFactory(

@@ -4,12 +4,9 @@ const {
 const {
   getSignatureAndValidate
 } = require("../userOp-signer");
-const {
-  Bundler,
-  P
-} = require("../config");
-async function main(WalletOwnerPrivateKey, smartWalletAddress, receiverERC20Address, ERC20TokenAddress, Provider) {
-  const chain = await Provider.provider._network;
+
+async function main(WalletOwnerPrivateKey, smartWalletAddress, receiverERC20Address, ERC20TokenAddress, Bundler, Provider, amount) {
+  const chain = await Provider.detectNetwork();
 
   const ERC20TokenFee = await ethers.getContractAt("CBDC", ERC20TokenAddress, Bundler);
 
@@ -18,7 +15,7 @@ async function main(WalletOwnerPrivateKey, smartWalletAddress, receiverERC20Addr
   const typesArgsTransfer = ["address", "uint256"];
   const functionArgsTransfer = [
     receiverERC20Address,
-    (100 * 10 ** (await ERC20TokenFee.decimals())).toString(),
+    (amount * 10 ** (await ERC20TokenFee.decimals())).toString(),
   ];
 
   const gasPrice = await Provider.getGasPrice();
