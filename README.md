@@ -18,15 +18,18 @@ The Smart Wallet is a Solidity smart contract that introduces a new way for user
 
 In this way to use Account Abstraction we do not need an Entry point and a Paymaster, as it is expected for internal use & not for using third party software.
 
-## Try it with a quick Demo using the CLI!
+## 👾👽 Try it with a quick Demo using the CLI!
 
 As always, first get some Native token (ARB) through the <a href="https://bwarelabs.com/faucets/arbitrum-testnet">Faucet.</a>
 
 ```sh
-   npm run CLI
+   npm run "demo"
 ```
 
 **IMPORTANT**: For this demo, we will use the Arbitrum Goerli testnet. Please, make sure you have set up the .env and have enough Test ARB in the Bundler´s Balance.
+
+<img width="697" alt="image" src="https://github.com/CristianRicharte6/GasFellow-Account-Abstraction/assets/102038261/5ee17fc8-18d3-4d4e-8b54-712f5203826c">
+
 
 ## Features
 
