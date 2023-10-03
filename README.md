@@ -30,6 +30,7 @@ As always, first get some Native token (ARB) through the <a href="https://bwarel
 
 <img width="697" alt="image" src="https://github.com/CristianRicharte6/GasFellow-Account-Abstraction/assets/102038261/5ee17fc8-18d3-4d4e-8b54-712f5203826c">
 
+<a href="https://goerli.arbiscan.io/tx/0xd4a37bd9d432b8f05d66e706bb6f2df363a735ec34836d45ad4c4ffbe62b4286">🧾 ArbiScan receipt</a>
 
 ## Features
 
