@@ -93,7 +93,7 @@ async function main() {
   console.log(`\nCheck the transaction receipt in the chain scanner by adding the Transaction Hash.`)
   console.log(`🧾 Transaction receipt: https://goerli.arbiscan.io/tx/${receipt.transactionHash}`)
 
-  console.log("\nDeveloped by Cristian Richarte Gil 🥷")
+  console.log("\nDeveloped by Cristian Richarte Gil 🥷 ")
 }
 
 main().catch(err => {
