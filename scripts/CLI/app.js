@@ -84,14 +84,14 @@ async function main() {
   console.log('\nCongrats!🎊 You have completed your first transaction without needing the Native Chain token and paying fees in eUSD')
   const BalanceARBafter = await Provider.getBalance(SmartWallet.address);
   const BalanceEUSDafter = (await CBDC.balanceOf(SmartWallet.address)) / 10 ** 8;
-  console.log(`\n-🏦 eUSD Balance after transfer: `, Number(await CBDC.balanceOf(SmartWallet.address) / 10 ** 8))
+  console.log(`\n- 🏦 eUSD Balance after transfer: `, Number(await CBDC.balanceOf(SmartWallet.address) / 10 ** 8))
   console.log(` - 📤eUSD Transferred: `, Number(amount));
   console.log(` - ⛽eUSD Gas Fee paid: `, Number((BalanceEUSDbefore - BalanceEUSDafter - amount)))
   console.log(` - 💲ARB paid as fee: `, Number(BalanceARBbefore - BalanceARBafter))
 
 
   console.log(`\nCheck the transaction receipt in the chain scanner by adding the Transaction Hash.`)
-  console.log(`🧾 Transaction Hash: https://goerli.arbiscan.io/tx/${receipt.transactionHash}`)
+  console.log(`🧾 Transaction receipt: https://goerli.arbiscan.io/tx/${receipt.transactionHash}`)
 
   console.log("\nDeveloped by Cristian Richarte Gil 🥷")
 }
