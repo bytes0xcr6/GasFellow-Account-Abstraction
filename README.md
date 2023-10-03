@@ -1,11 +1,9 @@
-# GasFellow - Account-Abstraction Library & CLI Demo
+# GasFellow - Account-Abstraction Library & CLI Demo for Smart Wallets
 
 GasFellow is an Account Abstraction Library for creating Smart Wallets and paying chain fees in any ERC-20 or even sponsor gas fee for users.
 
 ![image](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/57a92498-e657-442c-a0ed-94488b82677f)
 _Example of Transferring 1.000 eUSD and charging 0.00128788 as fee (Refund for Bundler). The Smart Wallet does not own the native chain currency._ [ArbiScan ERC20 Transfer receipt](https://goerli.arbiscan.io/tx/0x33aef128dd49a63af12981e9dff6a13c5d933d183b090dc05c763d3aa4f354ea)
-
-# Smart Wallet with Account Abstraction
 
 ## Overview
 
@@ -16,44 +14,18 @@ The Smart Wallet is a Solidity smart contract that introduces a new way for user
 - Smart Wallet Factory (Smart contract to deploy Smart Wallets to a precomputed address by using **_CREATE2_** & **_salt_**)
 - Smart Wallet (Smart contract where the User will keep all his assets and privileges)
 
-In this way to use Account Abstraction we do not need an Entry point and a Paymaster, as it is expected for internal use & not for using third party software.
+In this way to use Account Abstraction we do not need an Entry point and a Paymaster, as it is expected for internal use & not for depending of third parties as Bundlers.
+
 
 ## 👾👽 Try it with a quick Demo using the CLI!
-
-As always, first get some Native token (ARB) through the <a href="https://bwarelabs.com/faucets/arbitrum-testnet">Faucet.</a>
-
-```sh
-   npm run "demo"
-```
-
-**IMPORTANT**: For this demo, we will use the Arbitrum Goerli testnet. Please, make sure you have set up the .env and have enough Test ARB in the Bundler´s Balance.
 
 <img width="697" alt="image" src="https://github.com/CristianRicharte6/GasFellow-Account-Abstraction/assets/102038261/5ee17fc8-18d3-4d4e-8b54-712f5203826c">
 
 <a href="https://goerli.arbiscan.io/tx/0xd4a37bd9d432b8f05d66e706bb6f2df363a735ec34836d45ad4c4ffbe62b4286">🧾 ArbiScan receipt</a>
 
-## Features
+As always, first get some Native token (ARB) for the ***Bundler*** through the <a href="https://bwarelabs.com/faucets/arbitrum-testnet">Faucet.</a>
 
-- **Account Abstraction**: Users can interact with the blockchain without holding native Cryptocurrency.
-- **Flexible Fee Payment**: Execute transactions and pay transaction fees in any ERC20 token.
-- **Signature Verification**: Ensures secure and authenticated transaction execution.
-- **Gas-Efficient Fee Calculation**: Efficiently calculates and handles fee payments.
-- **Multiple Transaction Execution**: Execute single or batch transactions seamlessly.
-- **CBDC Deployment**: Deploy a CBDC for testing purposes. (Already deployed)
-
-## Getting Started
-
-- `UserOp-signer`: Library to get Call Data, Hash Transaction Data and Sign transaction Data by the Smart Wallet Owner (EOA). It also verifies that the Tx is correctly signed with the Smart Wallet.
-
-- `SmartWalletFactory`: It will help you deploy Smart Wallets with a precomputed address as it uses CREATE2.
-- `SmartWallet`: It will be the user's account, where the user will hold all their value and from where the user will interact. This smart wallet verifies through the ECDSA (Elliptic Curve Digital Signature Algorithm) that the transaction the Bundler is trying to send has been signed by the Smart Wallet Owner (EOA).
-- `CBDC`: It is just an example of an ERC20 for paying Fees. You do not need to deploy it if you impersonate accounts during testing.
-
-- `DeployCBDC`: Deployment Script for direct deployment of a CBDC.
-- `DeployDirectlySmartWallet`: Deployment Script for direct deployment of a Smart Wallet, without passing through the Smart Wallet Factory.
-- `DeploySmartWallet`: Deployment Script for Smart Wallet.
-- `DeploySmartWalletFactory`: Deployment Script for Smart Wallet Factory.
-- `SingleTransferSmartWallet`: Example of how to sign and send an ERC20 transaction through the Smart Wallet.
+**IMPORTANT**: For this demo, we will use the Arbitrum Goerli testnet. Please, make sure you have set up the .env and have enough Test ARB in the Bundler´s Balance.
 
 ### Prerequisites
 
@@ -77,12 +49,42 @@ As always, first get some Native token (ARB) through the <a href="https://bwarel
    ```sh
    npm install
    ```
+   
+3. Start the CLI
+
+   ```sh
+   npm run "demo"
+   ```
 
 ### Setting up Environments
 
 Follow the `.env.example` file. It is set up for deploying and execution in the Arbitrum Goerli Chain, but it can be used in any other EVM chain. Take into account to update the necessary variables.
 
-## Deployment
+## ✍️ Features
+
+- **Account Abstraction**: Users can interact with the blockchain without holding native Cryptocurrency.
+- **Flexible Fee Payment**: Execute transactions and pay transaction fees in any ERC20 token.
+- **Signature Verification**: Ensures secure and authenticated transaction execution.
+- **Gas-Efficient Fee Calculation**: Efficiently calculates and handles fee payments.
+- **Multiple Transaction Execution**: Execute single or batch transactions seamlessly.
+- **CBDC Deployment**: Deploy a CBDC for testing purposes. (Already deployed)
+
+## 🏄‍♀ Getting Started
+
+### Sources
+- `UserOp-signer`: Library to get Call Data, Hash Transaction Data and Sign transaction Data by the Smart Wallet Owner (EOA). It also verifies that the Tx is correctly signed with the Smart Wallet.
+
+- `SmartWalletFactory`: It will help you deploy Smart Wallets with a precomputed address as it uses CREATE2.
+- `SmartWallet`: It will be the user's account, where the user will hold all their value and from where the user will interact. This smart wallet verifies through the ECDSA (Elliptic Curve Digital Signature Algorithm) that the transaction the Bundler is trying to send has been signed by the Smart Wallet Owner (EOA).
+- `CBDC`: It is just an example of an ERC20 for paying Fees. You do not need to deploy it if you impersonate accounts during testing.
+
+- `DeployCBDC`: Deployment Script for direct deployment of a CBDC.
+- `DeployDirectlySmartWallet`: Deployment Script for direct deployment of a Smart Wallet, without passing through the Smart Wallet Factory.
+- `DeploySmartWallet`: Deployment Script for Smart Wallet.
+- `DeploySmartWalletFactory`: Deployment Script for Smart Wallet Factory.
+- `SingleTransferSmartWallet`: Example of how to sign and send an ERC20 transaction through the Smart Wallet.
+
+### Deployment
 
 Deploy the SmartWallet contract to your desired blockchain using your chosen development environment & setting up the Networks in the config. (e.g., `hardhat.config.js`)
 
@@ -106,13 +108,7 @@ Deploy the SmartWallet contract to your desired blockchain using your chosen dev
 
 Provide the necessary deployment parameters, including the contract owner's address, Chainlink price feed address, chain ID, and ERC20 token address for fees & for transferring (It can be the same one too, as in this project sample).
 
-## Usage
-
-#### Try it with a quick Demo using the CLI!
-
-```sh
-   npm run "demo"
-```
+### Usage
 
 **IMPORTANT**: For this demo, we will use the Arbitrum Goerli testnet. Please, make sure you have set up the .env and have enough Test ARB in the Bundler´s Balance.
 
