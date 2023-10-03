@@ -145,7 +145,7 @@ Provide valid transaction details, including target addresses, call data, and si
 
 For detailed usage instructions and contract functions, refer to the source code and comments.
 
-## Smart contract deployed & Participants (Arbitrum Chain Testnet)
+## Verified Smart contracts deployed & Participants (Arbitrum Chain Testnet)
 
 - **_Smart Wallet Factory_**: [0x5Ddaf39509866fD883695C627083BB79694508cB](https://goerli.arbiscan.io/address/0x5Ddaf39509866fD883695C627083BB79694508cB#code)
 
