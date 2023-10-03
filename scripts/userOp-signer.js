@@ -1,7 +1,4 @@
 const ethers = require("ethers");
-const {
-  Provider
-} = require("./config");
 
 // 1. Get CallData before hashing.
 function getCallData(functionId, typesArgs, functionArgs) {
@@ -47,17 +44,16 @@ async function getSignatureAndValidate(
   functionArgs,
   target,
   value,
-  nonce
+  nonce, chainId
 ) {
   let callData = getCallData(functionId, typesArgs, functionArgs);
-  const chain = await Provider.detectNetwork();
 
   let userOpHash = getUserOperationHashed(
     target,
     nonce,
     callData,
     value,
-    chain.chainId
+    chainId
   );
   let signature = await signMessage(userOpHash, signerPrivateKey);
 
@@ -77,7 +73,8 @@ async function getValueTxSignatureAndValidate(
   signerPrivateKey,
   receiver,
   value,
-  nonce
+  nonce,
+  chainId
 ) {
   let callData = "0x";
   let userOpHash = getUserOperationHashed(

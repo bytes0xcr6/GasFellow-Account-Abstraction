@@ -13,9 +13,7 @@ async function main(Bundler) {
     "SmartWalletFactory",
     Bundler
   );
-  const smartWalletFactory = await SmartWalletFactory.deploy(chain.chainId, {
-    gasPrice: 5000000000
-  });
+  const smartWalletFactory = await SmartWalletFactory.deploy(chain.chainId);
 
   await smartWalletFactory.deployed()
   // console.log(`SmartWalletFactory deployed to ${smartWalletFactory.address}`);

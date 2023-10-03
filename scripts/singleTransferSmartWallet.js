@@ -6,6 +6,7 @@ const {
 } = require("./userOp-signer");
 
 const WalletOwnerPrivateKey = process.env.SMART_WALLET_OWNER_PRIVATE_KEY;
+const chainId = process.env.CHAIN_ID;
 
 const smartWalletAddress = "0x040Aa3B42D136aB523BF614659d99bF2D98B8D65"; // Replace with the Smart wallet to interact.
 const receiverERC20Address = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; // Replace with the Address to transfer ERC20 token.
@@ -53,7 +54,8 @@ async function main() {
     functionArgsTransfer,
     ERC20TokenAddress,
     0,
-    await smartWallet.nonce()
+    await smartWallet.nonce(),
+    chainId
   );
   console.log("\n- ✅ transferERC20 Tx signature: ", transferRes.signature);
   console.log("\n- ✅ transferERC20 Tx callData: ", transferRes.callData);

@@ -1,6 +1,6 @@
 # GasFellow - Account-Abstraction Library & CLI Demo
 
-GasFellow is an Account Abstraction Library for deploying Smart Wallets and paying chain fees in any ERC-20 or even sponsor gas fee for users.
+GasFellow is an Account Abstraction Library for creating Smart Wallets and paying chain fees in any ERC-20 or even sponsor gas fee for users.
 
 ![image](https://github.com/CristianRicharte6/Account-Abstraction/assets/102038261/57a92498-e657-442c-a0ed-94488b82677f)
 _Example of Transferring 1.000 eUSD and charging 0.00128788 as fee (Refund for Bundler). The Smart Wallet does not own the native chain currency._ [ArbiScan ERC20 Transfer receipt](https://goerli.arbiscan.io/tx/0x33aef128dd49a63af12981e9dff6a13c5d933d183b090dc05c763d3aa4f354ea)
@@ -9,21 +9,24 @@ _Example of Transferring 1.000 eUSD and charging 0.00128788 as fee (Refund for B
 
 ## Overview
 
-The Smart Wallet with Account Abstraction is a Solidity smart contract that introduces a new way for users to execute transactions by paying the Gas fees in any ERC20 token or even have fees sponsored by a Bundler. This is an alternative where the only participants are:
+The Smart Wallet is a Solidity smart contract that introduces a new way for users to store value and execute transactions by paying the Gas fees in any ERC20 token or even have fees sponsored by a Bundler. This is an alternative where the only participants are:
 
-- User (EOA to sign transactions)
+- User (EOA or Key pair to sign transactions)
 - Bundler (EOA to add Transactions on chain, pay Gas Fees & Sponsor gas fees or get refunded in ERC20 token)
+- Smart Wallet Factory (Smart contract to deploy Smart Wallets to a precomputed address by using **_CREATE2_** & **_salt_**)
 - Smart Wallet (Smart contract where the User will keep all his assets and privileges)
-- Smart Wallet Factory (Smart contract to deploy Smart Wallets to a precomputed address by using CREATE2 & salt)
 
 In this way to use Account Abstraction we do not need an Entry point and a Paymaster, as it is expected for internal use & not for using third party software.
 
-## Try it with a quick Demo using the CLI! 
+## Try it with a quick Demo using the CLI!
+
+As always, first get some Native token (ARB) through the <a href="https://bwarelabs.com/faucets/arbitrum-testnet">Faucet.</a>
 
 ```sh
    npm run CLI
 ```
-**IMPORTANT**: For this demo, we will use the Binance Smart chain testnet. Please, make sure you have set up the .env and have enough Test BNB in the Bundler´s Balance.
+
+**IMPORTANT**: For this demo, we will use the Arbitrum Goerli testnet. Please, make sure you have set up the .env and have enough Test ARB in the Bundler´s Balance.
 
 ## Features
 
@@ -73,7 +76,7 @@ In this way to use Account Abstraction we do not need an Entry point and a Payma
 
 ### Setting up Environments
 
-Follow the `.env.example` file. It is set up for deploying and execution in the Arbitrum chain, but it can be used in any other EVM chain. Take into account to update the necessary variables.
+Follow the `.env.example` file. It is set up for deploying and execution in the Arbitrum Goerli Chain, but it can be used in any other EVM chain. Take into account to update the necessary variables.
 
 ## Deployment
 
@@ -101,12 +104,13 @@ Provide the necessary deployment parameters, including the contract owner's addr
 
 ## Usage
 
-#### Try it with a quick Demo using the CLI! 
+#### Try it with a quick Demo using the CLI!
 
 ```sh
-   npm run CLI
+   npm run "demo"
 ```
-**IMPORTANT**: For this demo, we will use the Binance Smart chain testnet. Please, make sure you have set up the .env and have enough Test BNB in the Bundler´s Balance.
+
+**IMPORTANT**: For this demo, we will use the Arbitrum Goerli testnet. Please, make sure you have set up the .env and have enough Test ARB in the Bundler´s Balance.
 
 The Smart Wallet contract allows users to execute transactions and pay fees in ERC20 tokens. Here's a basic example of how to use the contract:
 

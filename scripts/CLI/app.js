@@ -47,9 +47,7 @@ async function main() {
   console.log(`💳 Smart Wallet to: ${SmartWallet.address}`)
   console.log(`\n🌐 Chain Name: ${chain.name}, Chain Id: ${chain.chainId}`)
 
-  const transferRes = await CBDC.connect(Bundler).transfer(SmartWallet.address, 1000 * 10 ** 8, {
-    gasPrice: 5000000000
-  })
+  const transferRes = await CBDC.connect(Bundler).transfer(SmartWallet.address, 1000 * 10 ** 8)
   await transferRes.wait();
   const walletBalance = await CBDC.balanceOf(SmartWallet.address)
 

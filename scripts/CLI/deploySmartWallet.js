@@ -20,12 +20,10 @@ async function main(SmartWalletFactoryAddress, eUSDAddress, Bundler) {
   );
 
   const receipt = await SmartWalletFactory.connect(Bundler)
-    .createWallet(Owner, salt, priceFeedProxyAddress, ERC20Address, {
-      gasPrice: 5000000000
-    })
+    .createWallet(Owner, salt, priceFeedProxyAddress, ERC20Address)
     .then((tx) => tx.wait());
 
-  console.log(`Params to verify Smart Wallet: "${Owner}" "${priceFeedProxyAddress}" "${chain.chainId}" "${ERC20Address}"`)
+  // console.log(`Params to verify Smart Wallet: "${Owner}" "${priceFeedProxyAddress}" "${chain.chainId}" "${ERC20Address}"`)
   if (receipt.events.length > 0) {
     const baseAccountAddress = receipt.events[0].args[1];
     return baseAccountAddress;
