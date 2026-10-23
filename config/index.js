@@ -1,15 +1,16 @@
+const { loadPrivateKey } = require('../security/foundry-keystore.js');
 const {
     ethers
 } = require("ethers");
 
-const BundlerPKey = process.env.BUNDLER_PRIVATE_KEY;
-const SignerPKey = process.env.SMART_WALLET_OWNER_PRIVATE_KEY;
+const BundlerPKey = loadPrivateKey('BUNDLER_PRIVATE_KEY');
+const SignerPKey = loadPrivateKey('SMART_WALLET_OWNER_PRIVATE_KEY');
 const Provider = new ethers.providers.JsonRpcProvider(process.env.WEB3_HTTP_PROVIDER_TESTNET)
 const Owner = process.env.SMART_WALLET_OWNER_PUBLIC_KEY;
 const priceFeedProxyAddress = process.env.PRICE_FEED_PROXY;
 const CHAIN_ID = process.env.CHAIN_ID;
 const ERC20Address = process.env.ERC20_FEE;
-const WalletOwnerPrivateKey = process.env.SMART_WALLET_OWNER_PRIVATE_KEY;
+const WalletOwnerPrivateKey = loadPrivateKey('SMART_WALLET_OWNER_PRIVATE_KEY');
 const WalletOwnerPublicKey = process.env.SMART_WALLET_OWNER_PUBLIC_KEY;
 
 const Bundler = new ethers.Wallet(BundlerPKey, Provider)
