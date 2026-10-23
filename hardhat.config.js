@@ -1,3 +1,4 @@
+const { loadPrivateKeys } = require('./security/foundry-keystore.js');
 require("dotenv").config();
 require("@nomicfoundation/hardhat-toolbox");
 require("@nomiclabs/hardhat-etherscan");
@@ -21,19 +22,13 @@ module.exports = {
     },
     testnet: {
       url: process.env.WEB3_HTTP_PROVIDER_TESTNET,
-      accounts: [
-        process.env.BUNDLER_PRIVATE_KEY,
-        process.env.SMART_WALLET_OWNER_PRIVATE_KEY,
-      ],
+      accounts: loadPrivateKeys("BUNDLER_PRIVATE_KEY", "SMART_WALLET_OWNER_PRIVATE_KEY"),
       // gas: 2100000,
       // gasPrice: 10000000000,
     },
     mainnet: {
       url: process.env.WEB3_HTTP_PROVIDER_MAINNET,
-      accounts: [
-        process.env.BUNDLER_PRIVATE_KEY,
-        process.env.SMART_WALLET_OWNER_PRIVATE_KEY,
-      ],
+      accounts: loadPrivateKeys("BUNDLER_PRIVATE_KEY", "SMART_WALLET_OWNER_PRIVATE_KEY"),
       gas: 2100000,
       gasPrice: 10000000000,
     },

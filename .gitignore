@@ -9,3 +9,9 @@ typechain-types
 cache
 artifacts
 
+
+# Local signing credentials
+.env
+.env.local
+.env.*.local
+.foundry/

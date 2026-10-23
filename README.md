@@ -1,3 +1,5 @@
+> Operational signing now uses encrypted Foundry keystores. Follow [KEYSTORE_MIGRATION.md](KEYSTORE_MIGRATION.md); older raw private key environment instructions below are superseded.
+
 # GasFellow - Account-Abstraction Library & CLI Demo for Smart Wallets
 
 GasFellow is an Account Abstraction Library for creating Smart Wallets and paying chain fees in any ERC-20 or even sponsor gas fee for users.
